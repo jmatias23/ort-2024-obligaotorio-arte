@@ -1,10 +1,30 @@
 let sistema = new Sistema();
 
 window.addEventListener("load", inicio);
-let selectDerecha, selectIzquierda, selectExposicion, selectFiltroExposicion, tablaComentarios,
-    exposicionesConComentarios;
+let selectDerecha, selectIzquierda, selectExposicion, selectFiltroExposicion, tablaComentarios, exposicionesMasArtistas,
+    exposicionesConComentarios, buttonOrdenCalificacion;
+let ordenCalificacion = false;
+
+
+function filtrarComentarios() {
+    cargarTablaComentarios(selectFiltroExposicion.value, orden = false)
+}
+
+function cambiarOrden(event) {
+    event.preventDefault();
+    if (ordenCalificacion) {
+        ordenCalificacion = false;
+        buttonOrdenCalificacion.textContent = "Calificación creciente";
+    }else{
+        ordenCalificacion = true;
+        buttonOrdenCalificacion.textContent = "Calificación decreciente";
+    }
+
+    cargarTablaComentarios(selectFiltroExposicion.value, ordenCalificacion)
+}
 
 function inicio() {
+    buttonOrdenCalificacion = document.getElementById("ordenCalificacion");
     selectDerecha = document.getElementById("selectArtistasDerecha");
     selectIzquierda = document.getElementById("selectArtistasIzquierda");
     selectExposicion = document.getElementById("exposicionElegida");
@@ -16,6 +36,9 @@ function inicio() {
     document.getElementById("idFrmRegistrarArtista").addEventListener("submit", agregarArtista);
     document.getElementById("idFrmRegistrarExposicion").addEventListener("submit", agregarExposiscion);
     document.getElementById("formComentarios").addEventListener("submit", agregarComentario);
+
+    selectFiltroExposicion.addEventListener("change", filtrarComentarios)
+    buttonOrdenCalificacion.addEventListener("click", cambiarOrden)
 
     document.getElementById("pasarDerecha").addEventListener("click", moverArtistasDerecha)
     document.getElementById("pasarIzquierda").addEventListener("click", moverArtistasIzquierda)
@@ -176,15 +199,17 @@ function obtenerImagenDeCalificacion(calificacion) {
     }
 }
 
-function cargarTablaComentarios(titulo, orden) {
+function cargarTablaComentarios(titulo = "", orden = false) {
     tablaComentarios.innerHTML = ""
 
     const listaVisitas = sistema.obtenerListaVisitasOrdenadas(titulo, orden)
 
     for (let i = 0; i < listaVisitas.length; i++) {
-        const visita = listaVisitas[i]
+        let visita = listaVisitas[i]
         let row = document.createElement("tr");
         let columnaTitulo = document.createElement("td");
+        console.log(visita)
+
         columnaTitulo.textContent = visita.exposicion.titulo;
         let columnaMasDatos = document.createElement("td");
         columnaMasDatos.innerHTML = `<button type='button' onclick='mostrarInfo(${visita.id})'>Ampliar</button>`;
