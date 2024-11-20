@@ -1,0 +1,172 @@
+<!-- Juan Penedo (290019) -->
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="css/estilos.css" rel="stylesheet">
+    <script src="js/clases.js"></script>
+    <script src="js/main.js"></script>
+    <title>Museo de Arte</title>
+</head>
+
+<body>
+<header>
+    <br>
+    <h1>Museo de Arte</h1>
+    <h3>Trabajo realizado por <a href="https://aulas.ort.edu.uy/">Juan Penedo (290019)</a></h3>
+    <button>Colores</button>
+    <br><br><br>
+</header>
+
+
+<section id="seccion1">
+    <h2>Ingresos</h2>
+    <div id="articleprincipal">
+
+        <article id="article1">
+            <h2>Registrar Artistas</h2>
+            <form id="idFrmRegistrarArtista">
+                <label for="idNombreArtista">Nombre:</label><br>
+                <input id="idNombreArtista" name="nombre" required type="text"><br>
+                <label for="idEdadArtista">Edad:</label><br>
+                <input id="idEdadArtista" name="edad" required type="number"><br>
+                <label for="idEstilo">Características del estilo:</label><br>
+                <textarea id="idEstilo" name="estilo" required></textarea><br>
+                <input id="btnAgregarArt" type="submit" value="Agregar Artista">
+            </form>
+        </article>
+
+        <article id="article2">
+            <h2>Ingresar Exposiciones</h2>
+            <form id="idFrmRegistrarExposicion">
+                <label for="tituloExposicion">Título:</label><br>
+                <input id="tituloExposicion" name="tituloExposicion" required type="text"><br>
+                <label for="fechaExposicion">Fecha de comienzo:</label><br>
+                <input id="fechaExposicion" name="fechaExposicion" required type="date"><br>
+                <label for="descripcionExposicion">Descripción:</label><br>
+                <textarea id="descripcionExposicion" name="descripcionExposicion" required></textarea><br>
+                <h4>Elegir artistas:</h4>
+                <div id="articleGeneral">
+                    <br>
+                    <label for="selectArtistasIzquierda"></label>
+                    <select id="selectArtistasIzquierda" multiple name="selectArtistasIzquierda"></select>
+                    <button id="pasarDerecha" type="button">&gt;&gt;</button>
+                    <button id="pasarIzquierda" type="button">&lt;&lt;</button>
+                    <label for="selectArtistasDerecha"></label>
+                    <select id="selectArtistasDerecha" multiple name="selectArtistasDerecha">
+                    </select>
+                </div>
+
+                <br><br>
+                <button type="submit">Agregar Exposicion</button>
+            </form>
+        </article>
+
+        <article id="article3">
+            <h2>Comentarios de Visitas</h2>
+            <form>
+                <label for="expo">Exposición:</label><br><br>
+                <select id="expo" name="expo" required>
+                    <option>Título 1</option>
+                    <option>Título 2</option>
+                </select>
+                <br><br>
+                <label for="visitante">Nombre del visitante:</label><br>
+                <input id="visitante" name="visitante" required type="text"><br>
+                <label for="comentario">Comentario:</label><br>
+                <textarea id="comentario" name="comentario" required></textarea>
+                <h4>Calificación:</h4>
+
+                <input id="cal1" name="calificacion" type="radio" value="1">
+                <label for="cal1"><img alt="Rojo" src="img/IMG-20241023-WA0007.jpg"></label>
+                <input id="cal2" name="calificacion" type="radio" value="2">
+                <label for="cal2"><img alt="Naranja" src="img/IMG-20241023-WA0011.jpg"></label>
+                <input id="cal3" name="calificacion" type="radio" value="3">
+                <label for="cal3"><img alt="Amarillo" src="img/IMG-20241023-WA0009.jpg"></label>
+                <input id="cal4" name="calificacion" type="radio" value="4">
+                <label for="cal4"><img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg"></label>
+                <input id="cal5" name="calificacion" type="radio" value="5">
+                <label for="cal5"><img alt="Verde oscuro" src="img/IMG-20241023-WA0008.jpg"></label>
+
+
+                <br>
+                <input id="visita_guiada" name="visita_guiada" type="checkbox">
+                <label for="visita_guiada">Hice visita guiada</label>
+                <br>
+                <button type="submit">Agregar Comentario</button>
+            </form>
+        </article>
+    </div>
+</section>
+
+
+<section id="seccion2">
+    <h2>Información General</h2>
+    <h3>Título de las Exposiciones con más artistas:</h3>
+    <ul>
+        <li>Dato Ficticio 1</li>
+        <li>Dato Ficticio 2</li>
+    </ul>
+
+
+    <h3>Título y fecha de las Exposiciones con comentarios (ordenadas por fecha creciente):</h3>
+    <ul>
+        <li>Dato Ficticio 1</li>
+        <li>Dato Ficticio 2</li>
+    </ul>
+
+    <h2>Información de Comentarios</h2>
+    <form>
+        <label for="expo-coment">Exposición:</label><br>
+        <select id="expo-coment" name="expo-coment">
+            <option>Todas</option>
+            <option>Título 1</option>
+            <option>Título 2</option>
+        </select>
+        <br><br><br>
+
+
+        <table>
+            <thead>
+            <tr>
+                <th>Título</th>
+                <th>Más datos</th>
+                <th>Nombre</th>
+                <th>Comentario</th>
+                <th>Guiada</th>
+                <th>
+                    <button>Calificación creciente</button>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>Título 1</td>
+                <td>
+                    <button>Ampliar</button>
+                </td>
+                <td>Nombre ficticio 1</td>
+                <td>Comentario ficticio 1</td>
+                <td>NO</td>
+                <td><img alt="Rojo" src="img/IMG-20241023-WA0007.jpg"></td>
+            </tr>
+            <tr>
+                <td>Título 2</td>
+                <td>
+                    <button>Ampliar</button>
+                </td>
+                <td>Nombre ficticio 2</td>
+                <td>Comentario ficticio 2</td>
+                <td>SÍ</td>
+                <td><img alt="Verde oscuro" src="img/IMG-20241023-WA0008.jpg"></td>
+            </tr>
+            </tbody>
+        </table>
+    </form>
+</section>
+</body>
+
+</html>
