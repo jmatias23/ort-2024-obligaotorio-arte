@@ -35,7 +35,7 @@
                 <input id="idEdadArtista" name="edad" required type="number"><br>
                 <label for="idEstilo">Características del estilo:</label><br>
                 <textarea id="idEstilo" name="estilo" required></textarea><br>
-                <input id="btnAgregarArt" type="submit" value="Agregar Artista">
+                <button type="submit">Agregar Artista</button>
             </form>
         </article>
 
@@ -67,20 +67,17 @@
 
         <article id="article3">
             <h2>Comentarios de Visitas</h2>
-            <form>
-                <label for="expo">Exposición:</label><br><br>
-                <select id="expo" name="expo" required>
-                    <option>Título 1</option>
-                    <option>Título 2</option>
-                </select>
+            <form id="formComentarios">
+                <label for="exposicionElegida">Exposición:</label><br><br>
+                <select id="exposicionElegida" name="exposicionElegida" required></select>
                 <br><br>
-                <label for="visitante">Nombre del visitante:</label><br>
-                <input id="visitante" name="visitante" required type="text"><br>
-                <label for="comentario">Comentario:</label><br>
-                <textarea id="comentario" name="comentario" required></textarea>
+                <label for="nombreVisitante">Nombre del visitante:</label><br>
+                <input id="nombreVisitante" name="nombreVisitante" required type="text"><br>
+                <label for="comentarioVisitante">Comentario:</label><br>
+                <textarea id="comentarioVisitante" name="comentarioVisitante" required></textarea>
                 <h4>Calificación:</h4>
 
-                <input id="cal1" name="calificacion" type="radio" value="1">
+                <input id="cal1" name="calificacion" type="radio" value="1" required>
                 <label for="cal1"><img alt="Rojo" src="img/IMG-20241023-WA0007.jpg"></label>
                 <input id="cal2" name="calificacion" type="radio" value="2">
                 <label for="cal2"><img alt="Naranja" src="img/IMG-20241023-WA0011.jpg"></label>
@@ -91,10 +88,9 @@
                 <input id="cal5" name="calificacion" type="radio" value="5">
                 <label for="cal5"><img alt="Verde oscuro" src="img/IMG-20241023-WA0008.jpg"></label>
 
-
                 <br>
-                <input id="visita_guiada" name="visita_guiada" type="checkbox">
-                <label for="visita_guiada">Hice visita guiada</label>
+                <input id="comentarioVisitaGuiada" name="comentarioVisitaGuiada" type="checkbox">
+                <label for="comentarioVisitaGuiada">Hice visita guiada</label>
                 <br>
                 <button type="submit">Agregar Comentario</button>
             </form>
@@ -102,32 +98,25 @@
     </div>
 </section>
 
-
 <section id="seccion2">
     <h2>Información General</h2>
     <h3>Título de las Exposiciones con más artistas:</h3>
-    <ul>
-        <li>Dato Ficticio 1</li>
-        <li>Dato Ficticio 2</li>
+    <ul id="exposicionesMasArtistas">
+        <li>Sin Datos</li>
     </ul>
 
-
     <h3>Título y fecha de las Exposiciones con comentarios (ordenadas por fecha creciente):</h3>
-    <ul>
-        <li>Dato Ficticio 1</li>
-        <li>Dato Ficticio 2</li>
+    <ul id="exposicionesConComentarios">
+        <li>Sin Datos</li>
     </ul>
 
     <h2>Información de Comentarios</h2>
     <form>
-        <label for="expo-coment">Exposición:</label><br>
-        <select id="expo-coment" name="expo-coment">
+        <label for="filtroExposicion">Exposición:</label><br>
+        <select id="filtroExposicion" name="filtroExposicion">
             <option>Todas</option>
-            <option>Título 1</option>
-            <option>Título 2</option>
         </select>
         <br><br><br>
-
 
         <table>
             <thead>
@@ -142,27 +131,8 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
-            <tr>
-                <td>Título 1</td>
-                <td>
-                    <button>Ampliar</button>
-                </td>
-                <td>Nombre ficticio 1</td>
-                <td>Comentario ficticio 1</td>
-                <td>NO</td>
-                <td><img alt="Rojo" src="img/IMG-20241023-WA0007.jpg"></td>
-            </tr>
-            <tr>
-                <td>Título 2</td>
-                <td>
-                    <button>Ampliar</button>
-                </td>
-                <td>Nombre ficticio 2</td>
-                <td>Comentario ficticio 2</td>
-                <td>SÍ</td>
-                <td><img alt="Verde oscuro" src="img/IMG-20241023-WA0008.jpg"></td>
-            </tr>
+            <tbody id="tablaComentarios">
+
             </tbody>
         </table>
     </form>

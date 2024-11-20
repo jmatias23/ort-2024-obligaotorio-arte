@@ -18,7 +18,8 @@ class Exposicion {
 }
 
 class Visita {
-    constructor(exposicion, visitante, comentario, calificacion, visitaGuiada) {
+    constructor(id, exposicion, visitante, comentario, calificacion, visitaGuiada) {
+        this.id = id;
         this.exposicion = exposicion;
         this.visitante = visitante;
         this.comentario = comentario;
@@ -32,7 +33,6 @@ class Sistema {
         this.listaArtistas = [];
         this.listaExposiciones = [];
         this.listaVisitas = [];
-
     }
 
     agregarArtista(nombre, edad, estilo) {
@@ -43,6 +43,13 @@ class Sistema {
         const exposicion = new Exposicion(titulo, fecha, descripcion, artistas);
         this.listaExposiciones.push(exposicion);
         console.log(`Exposición ${titulo} agregada.`);
+    }
+
+    agregarVisita(exposicion, visitante, comentario, calificacion, visitaGuiada = false) {
+        const id = this.listaVisitas.length += 1
+        const visita = new Visita(id, exposicion, visitante, comentario, calificacion, visitaGuiada);
+        this.listaVisitas.push(visita);
+        console.log(`Comentario de ${visitante} agregado.`);
     }
 
     existeArtista(nombre) {
@@ -67,6 +74,20 @@ class Sistema {
         return false;
     }
 
+    existeComentario(titulo, visitante) {
+        titulo = titulo.toLowerCase();
+        for (let i = 0; i < this.listaVisitas.length; i++) {
+            let visita = this.listaVisitas[i]
+            let visitanteAuxiliar = visita.exposicion.visitante.toLowerCase()
+            let tituloAuxiliar = visita.exposicion.titulo.toLowerCase()
+
+            if (titulo === tituloAuxiliar && visitante === visitanteAuxiliar) {
+                return true
+            }
+        }
+        return false;
+    }
+
     obtenerArtistaPorNombre(nombre) {
         nombre = nombre.toLowerCase();
         for (let i = 0; i < this.listaArtistas.length; i++) {
@@ -76,6 +97,60 @@ class Sistema {
             }
         }
         return null;
+    }
+
+    obtenerExposicionPorTitulo(titulo) {
+        titulo = titulo.toLowerCase();
+        for (let i = 0; i < this.listaExposiciones.length; i++) {
+            let tituloAuxiliar = this.listaExposiciones[i].titulo.toLowerCase();
+            if (titulo === tituloAuxiliar) {
+                return this.listaExposiciones[i]
+            }
+        }
+        return null;
+    }
+
+    obtenerExposicionPorIdVisita(id) {
+        for (let i = 0; i < this.listaVisitas.length; i++) {
+            if (id === this.listaVisitas[i].id) {
+                return this.listaVisitas[i].exposicion
+            }
+        }
+    }
+
+    obtenerExposicionesConMasArtistas() {
+        let lista = this.listaExposiciones;
+
+        return lista.sort((a, b) => a.artistas.length.localeCompare(b.artistas.length));
+    }
+
+    obtenerExposicionesConComentarios() {
+        let lista = [];
+        for (let i = 0; i < this.listaExposiciones.length; i++) {
+            for (let j = 0; j < this.listaVisitas.length; j++) {
+                if (this.listaExposiciones[j].titulo === this.listaVisitas[j].exposicion.titulo) {
+                    lista.push(this.listaExposiciones[j]);
+                    break;
+                }
+            }
+        }
+
+        return lista.sort((a, b) => a.artistas.length.localeCompare(b.artistas.length));
+    }
+
+    obtenerListaVisitasOrdenadas(titulo = "", creciente = false) {
+        let lista = this.listaVisitas;
+
+        if (titulo !== "") {
+            lista = lista.filter(visita => visita.titulo.toLowerCase() === titulo);
+        }
+        if (creciente) {
+            lista.sort((a, b) => a.calificacion.localeCompare(b.calificacion));
+        } else {
+            lista.sort((a, b) => b.calificacion.localeCompare(a.calificacion));
+        }
+
+        return lista;
     }
 
 
@@ -92,76 +167,6 @@ class Sistema {
 //         document.getElementById("seccion2").style.backgroundColor = "#e0ffff";
 //     }
 
-//     // Método adicional para ordenar y mostrar los artistas en la lista de selección
-//     obtenerListaArtistasOrdenada() {
-//         return this.listaArtistas.sort((a, b) => a.nombre.localeCompare(b.nombre));
-//     }
-// }
-// // clases.js
-
-// class Artista {
-//     constructor(nombre, edad, estilo) {
-//         this.nombre = nombre;
-//         this.edad = edad;
-//         this.estilo = estilo;
-//     }
-// }
-
-// class Exposicion {
-//     constructor(titulo, fecha, descripcion, artistas = []) {
-//         this.titulo = titulo;
-//         this.fecha = fecha;
-//         this.descripcion = descripcion;
-//         this.artistas = artistas; // Array de objetos Artista
-//     }
-// }
-
-// class Visita {
-//     constructor(exposicion, visitante, comentario, calificacion, visitaGuiada = false) {
-//         this.exposicion = exposicion;
-//         this.visitante = visitante;
-//         this.comentario = comentario;
-//         this.calificacion = calificacion;
-//         this.visitaGuiada = visitaGuiada;
-//     }
-// }
-
-// class Sistema {
-//     constructor() {
-//         this.artistas = new Set();       // Almacena nombres de artistas únicos
-//         this.exposiciones = new Set();   // Almacena títulos de exposiciones únicos
-//         this.listaArtistas = [];         // Array de objetos Artista
-//         this.listaExposiciones = [];     // Array de objetos Exposicion
-//         this.listaVisitas = [];          // Array de objetos Visita
-//     }
-
-//     agregarArtista(nombre, edad, estilo) {
-//         if (this.artistas.has(nombre)) {
-//             console.log("El nombre del artista ya está registrado.");
-//             return;
-//         }
-//         const artista = new Artista(nombre, edad, estilo);
-//         this.listaArtistas.push(artista);
-//         this.artistas.add(nombre); // Agregar el nombre al conjunto para evitar duplicados
-//         console.log(`Artista ${nombre} agregado.`);
-//     }
-
-//     agregarExposicion(titulo, fecha, descripcion, artistas = []) {
-//         if (this.exposiciones.has(titulo)) {
-//             console.log("El título de la exposición ya está registrado.");
-//             return;
-//         }
-//         const exposicion = new Exposicion(titulo, fecha, descripcion, artistas);
-//         this.listaExposiciones.push(exposicion);
-//         this.exposiciones.add(titulo); // Agregar el título al conjunto para evitar duplicados
-//         console.log(`Exposición ${titulo} agregada.`);
-//     }
-
-//     agregarVisita(exposicion, visitante, comentario, calificacion, visitaGuiada = false) {
-//         const visita = new Visita(exposicion, visitante, comentario, calificacion, visitaGuiada);
-//         this.listaVisitas.push(visita);
-//         console.log(`Comentario de ${visitante} agregado.`);
-//     }
 
 //     cambiarColores() {
 //         document.body.style.backgroundColor = "#f0e68c";
@@ -170,10 +175,6 @@ class Sistema {
 //         document.getElementById("seccion2").style.backgroundColor = "#e0ffff";
 //     }
 
-//     // Método adicional para ordenar y mostrar los artistas en la lista de selección
-//     obtenerListaArtistasOrdenada() {
-//         return this.listaArtistas.sort((a, b) => a.nombre.localeCompare(b.nombre));
-//     }
-// 
+
 }
 

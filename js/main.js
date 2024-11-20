@@ -1,16 +1,27 @@
 let sistema = new Sistema();
 
 window.addEventListener("load", inicio);
-let selectDerecha, selectIzquierda;
+let selectDerecha, selectIzquierda, selectExposicion, selectFiltroExposicion, tablaComentarios,
+    exposicionesConComentarios;
 
 function inicio() {
     selectDerecha = document.getElementById("selectArtistasDerecha");
     selectIzquierda = document.getElementById("selectArtistasIzquierda");
+    selectExposicion = document.getElementById("exposicionElegida");
+    selectFiltroExposicion = document.getElementById("filtroExposicion");
+    tablaComentarios = document.getElementById("tablaComentarios");
+    exposicionesMasArtistas = document.getElementById("exposicionesMasArtistas")
+    exposicionesConComentarios = document.getElementById("exposicionesConComentarios")
+
     document.getElementById("idFrmRegistrarArtista").addEventListener("submit", agregarArtista);
     document.getElementById("idFrmRegistrarExposicion").addEventListener("submit", agregarExposiscion);
+    document.getElementById("formComentarios").addEventListener("submit", agregarComentario);
+
     document.getElementById("pasarDerecha").addEventListener("click", moverArtistasDerecha)
     document.getElementById("pasarIzquierda").addEventListener("click", moverArtistasIzquierda)
+
     cargarSelectArtistas();
+    cargarSelectExposicion();
 }
 
 function limpiar() {
@@ -49,7 +60,6 @@ function agregarArtista(event) {
     }
 }
 
-
 function agregarExposiscion(event) {
     event.preventDefault();
     const titulo = document.getElementById("tituloExposicion").value;
@@ -57,7 +67,7 @@ function agregarExposiscion(event) {
     const descripcion = document.getElementById("descripcionExposicion").value;
     const seleccionados = document.getElementById("selectArtistasDerecha");
 
-    if (seleccionados.length == 0) {
+    if (seleccionados.length === 0) {
         alert("Debe agregar al menos un artista a la lista.")
         return;
     }
@@ -68,17 +78,158 @@ function agregarExposiscion(event) {
         artistas.push(sistema.obtenerArtistaPorNombre(nombre));
     }
 
-    console.log(artistas);
-
     if (sistema.existeExposicion(titulo)) {
-        alert("Artista ya existe.");
+        alert("Exposición ya existe.");
     } else {
         sistema.agregarExposicion(titulo, fecha, descripcion, artistas);
-        alert("artista registrado");
+        alert("Exposisción registrada");
         document.getElementById("idFrmRegistrarExposicion").reset();
         seleccionados.innerHTML = "";
         cargarSelectArtistas();
+        cargarSelectExposicion();
+        cargarSelectExposicionFiltro();
+        cargarListasMasArtistas()
+        cargarListasConComentarios()
     }
+}
+
+function cargarListasMasArtistas() {
+    const exposiciones = sistema.obtenerExposicionesConMasArtistas();
+    exposicionesMasArtistas.innerHTML = ""
+    if (exposiciones.length === 0) {
+        let item = document.createElement("li");
+        item.textContent = "Sin Datos";
+        exposicionesMasArtistas.appendChild(item);
+    } else {
+        for (let i = 0; i < exposiciones.length; i++) {
+            let item = document.createElement("li");
+            item.textContent = exposiciones[i].titulo;
+            exposicionesMasArtistas.appendChild(item);
+        }
+    }
+}
+
+function cargarListasConComentarios() {
+    const exposiciones = sistema.obtenerExposicionesConComentarios();
+    exposicionesConComentarios.innerHTML = ""
+    if (exposiciones.length === 0) {
+        let item = document.createElement("li");
+        item.textContent = "Sin Datos";
+        exposicionesConComentarios.appendChild(item);
+    } else {
+        for (let i = 0; i < exposiciones.length; i++) {
+            let item = document.createElement("li");
+            item.textContent = exposiciones[i].titulo;
+            exposicionesConComentarios.appendChild(item);
+        }
+    }
+}
+
+function agregarComentario(event) {
+    event.preventDefault();
+
+    const visitante = document.getElementById("nombreVisitante").value;
+    const exposicion = document.getElementById("exposicionElegida").value;
+    const comentario = document.getElementById("comentarioVisitante").value;
+    const calificacion = document.querySelector('input[name=calificacion]:checked').value;
+    const visitaGuiada = document.querySelector('input[name=comentarioVisitaGuiada]:checked');
+    console.log(visitaGuiada);
+    if (sistema.existeComentario(exposicion, visitante)) {
+        alert("Ya existe un comentario de este visitante para esta exposición")
+        return;
+    }
+
+    const exposicionEncontrada = sistema.obtenerExposicionPorTitulo(exposicion)
+    sistema.agregarVisita(exposicionEncontrada, visitante, comentario, calificacion, visitaGuiada)
+    document.getElementById("formComentarios").reset()
+    cargarTablaComentarios()
+}
+
+
+function mostrarInfo(id) {
+    const exposicion = sistema.obtenerExposicionPorIdVisita(id);
+    let mensaje = "";
+    const enter = "\n";
+    mensaje += "Titulo: " + exposicion.titulo + enter;
+    mensaje += "Fecha: " + exposicion.fecha + enter;
+    mensaje += "Descripcion: " + exposicion.descripcion + enter;
+    mensaje += "Artistas: " + enter;
+    for (let i = 0; i < exposicion.artistas; i++) {
+        mensaje += exposicion.artistas[i].nombre + enter;
+    }
+
+    alert(mensaje);
+}
+
+function obtenerImagenDeCalificacion(calificacion) {
+    switch (calificacion) {
+        case 1:
+            return '<img alt="Rojo" src="img/IMG-20241023-WA0007.jpg">';
+        case 2:
+            return '<img alt="Naranja" src="img/IMG-20241023-WA0011.jpg">';
+        case 3:
+            return '<img alt="Amarillo" src="img/IMG-20241023-WA0009.jpg>"';
+        case 4:
+            return '<img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg">';
+        default:
+            return '<img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg">';
+    }
+}
+
+function cargarTablaComentarios(titulo, orden) {
+    tablaComentarios.innerHTML = ""
+
+    const listaVisitas = sistema.obtenerListaVisitasOrdenadas(titulo, orden)
+
+    for (let i = 0; i < listaVisitas.length; i++) {
+        const visita = listaVisitas[i]
+        let row = document.createElement("tr");
+        let columnaTitulo = document.createElement("td");
+        columnaTitulo.textContent = visita.exposicion.titulo;
+        let columnaMasDatos = document.createElement("td");
+        columnaMasDatos.innerHTML = `<button type='button' onclick='mostrarInfo(${visita.id})'>Ampliar</button>`;
+        let columnaNombre = document.createElement("td");
+        columnaNombre.innerHTML = visita.nombre;
+        let columnaComentario = document.createElement("td");
+        columnaComentario.innerHTML = visita.comentario;
+        let columnaGuiada = document.createElement("td");
+        columnaGuiada.innerHTML = visita.visitaGuiada === 1 ? "SI" : "NO";
+        let columnaCalificacion = document.createElement("td");
+        columnaCalificacion.innerHTML = obtenerImagenDeCalificacion(visita.calificacion);
+
+        row.appendChild(columnaTitulo);
+        row.appendChild(columnaMasDatos);
+        row.appendChild(columnaNombre);
+        row.appendChild(columnaComentario);
+        row.appendChild(columnaGuiada);
+        row.appendChild(columnaCalificacion);
+
+        tablaComentarios.appendChild(row);
+    }
+}
+
+function cargarSelectExposicion() {
+    selectExposicion.innerHTML = "";
+    for (let i = 0; i < sistema.listaExposiciones.length; i++) {
+        let titulo = sistema.listaExposiciones[i].titulo;
+        let opcion = document.createElement("option");
+        let textoOpcion = document.createTextNode(titulo);
+        opcion.appendChild(textoOpcion);
+        selectExposicion.appendChild(opcion);
+    }
+    ordenarSelect(selectExposicion)
+}
+
+function cargarSelectExposicionFiltro() {
+    selectFiltroExposicion.innerHTML = "";
+    for (let i = 0; i < sistema.listaExposiciones.length; i++) {
+        let titulo = sistema.listaExposiciones[i].titulo;
+        let opcion = document.createElement("option");
+        let textoOpcion = document.createTextNode(titulo);
+        opcion.appendChild(textoOpcion);
+        selectFiltroExposicion.appendChild(opcion);
+    }
+    ordenarSelect(selectFiltroExposicion)
 }
 
 function elimnarElementoDeSelect(selectARemover, valorAEliminar) {
