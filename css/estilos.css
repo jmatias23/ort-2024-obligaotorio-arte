@@ -112,20 +112,31 @@ button[type="submit"],
 }
 
 
+/* Oculta los radio buttons */
 #article3 input[type="radio"] {
     display: none;
 }
 
-#article3 img,
-#seccion2 img {
-    width: 50px;
-    height: 50px;
+/* Resalta la imagen cuando está seleccionada */
+#article3 input[type="radio"]:checked + label img {
+    border: 2px solid green; /* Puedes cambiar el color y el estilo */
+    border-radius: 5px; /* Opcional: redondea los bordes */
+}
+
+/* Cambia el cursor para indicar que es clickeable */
+#article3 label img {
     cursor: pointer;
-    transition: transform 0.2s ease;
+    width: 50px; /* Ajusta el tamaño si es necesario */
+    height: auto;
 }
 
 #article3 label img:hover {
     transform: scale(1.1);
+}
+
+#seccion2 img {
+    width: 50px;
+    height: 50px;
 }
 
 

@@ -42,14 +42,12 @@ class Sistema {
     agregarExposicion(titulo, fecha, descripcion, artistas = []) {
         const exposicion = new Exposicion(titulo, fecha, descripcion, artistas);
         this.listaExposiciones.push(exposicion);
-        console.log(`Exposición ${titulo} agregada.`);
     }
 
     agregarVisita(exposicion, visitante, comentario, calificacion, visitaGuiada = false) {
-        const id = this.listaVisitas.length += 1
-        const visita = new Visita(id, exposicion, visitante, comentario, calificacion, visitaGuiada);
-        this.listaVisitas.push(visita);
-        console.log(`Comentario de ${visitante} agregado.`);
+        const id = this.listaVisitas.length + 1;
+        this.listaVisitas.push(new Visita(id, exposicion, visitante, comentario, calificacion, visitaGuiada));
+
     }
 
     existeArtista(nombre) {
@@ -78,10 +76,14 @@ class Sistema {
         titulo = titulo.toLowerCase();
         for (let i = 0; i < this.listaVisitas.length; i++) {
             let visita = this.listaVisitas[i]
-            let visitanteAuxiliar = visita.exposicion.visitante.toLowerCase()
+            if (!visita || !visita.visitante || !visita.exposicion) {
+                console.warn(`Visita inválida encontrada en la posición ${i}`, visita);
+                continue; // Salta las visitas inválidas
+            }
+            let visitanteAuxiliar = visita.visitante.toLowerCase()
             let tituloAuxiliar = visita.exposicion.titulo.toLowerCase()
 
-            if (titulo === tituloAuxiliar && visitante === visitanteAuxiliar) {
+            if (titulo == tituloAuxiliar && visitante == visitanteAuxiliar) {
                 return true
             }
         }
@@ -119,35 +121,35 @@ class Sistema {
     }
 
     obtenerExposicionesConMasArtistas() {
-        let lista = this.listaExposiciones;
+        let lista = [...this.listaExposiciones];
 
-        return lista.sort((a, b) => a.artistas.length.localeCompare(b.artistas.length));
+        return lista.sort((a, b) => b.artistas.length - a.artistas.length);
     }
 
     obtenerExposicionesConComentarios() {
         let lista = [];
         for (let i = 0; i < this.listaExposiciones.length; i++) {
             for (let j = 0; j < this.listaVisitas.length; j++) {
-                if (this.listaExposiciones[j].titulo === this.listaVisitas[j].exposicion.titulo) {
-                    lista.push(this.listaExposiciones[j]);
+                if (this.listaExposiciones[i].titulo === this.listaVisitas[j].exposicion.titulo) {
+                    lista.push(this.listaExposiciones[i]);
                     break;
                 }
             }
         }
 
-        return lista.sort((a, b) => a.artistas.length.localeCompare(b.artistas.length));
+        return lista.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
     }
 
-    obtenerListaVisitasOrdenadas(titulo = "", creciente = false) {
-        let lista = this.listaVisitas;
+    obtenerListaVisitasOrdenadas(titulo = "Todos", creciente = true) {
+        let lista = [...this.listaVisitas];
 
-        if (titulo !== "") {
-            lista = lista.filter(visita => visita.titulo.toLowerCase() === titulo);
+        if (titulo !== "Todos") {
+            lista = lista.filter((visita) => visita.exposicion.titulo.toLowerCase() == titulo);
         }
         if (creciente) {
-            lista.sort((a, b) => a.calificacion.localeCompare(b.calificacion));
+            lista.sort((a, b) => a.calificacion - b.calificacion);
         } else {
-            lista.sort((a, b) => b.calificacion.localeCompare(a.calificacion));
+            lista.sort((a, b) => b.calificacion - a.calificacion);
         }
 
         return lista;
