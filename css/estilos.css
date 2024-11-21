@@ -17,7 +17,6 @@ header {
 header button {
     padding: 10px 20px;
     background-color: white;
-    color: (241, 241, 241);
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -32,6 +31,18 @@ header button {
     font-weight: bold;
     width: 90%;
 
+}
+
+#header.green {
+    background-color: forestgreen;
+}
+
+#seccion1.green {
+    background-color: forestgreen;
+}
+
+#seccion2.green {
+    background-color: forestgreen;
 }
 
 #seccion2 {

@@ -14,10 +14,10 @@ function cambiarOrden(event) {
     event.preventDefault();
     if (ordenCalificacion) {
         ordenCalificacion = false;
-        buttonOrdenCalificacion.textContent = "Calificación creciente";
-    }else{
-        ordenCalificacion = true;
         buttonOrdenCalificacion.textContent = "Calificación decreciente";
+    } else {
+        ordenCalificacion = true;
+        buttonOrdenCalificacion.textContent = "Calificación creciente";
     }
 
     cargarTablaComentarios(selectFiltroExposicion.value, ordenCalificacion)
@@ -42,6 +42,12 @@ function inicio() {
 
     document.getElementById("pasarDerecha").addEventListener("click", moverArtistasDerecha)
     document.getElementById("pasarIzquierda").addEventListener("click", moverArtistasIzquierda)
+
+    document.getElementById('colores').addEventListener('click', e => {
+        document.getElementById("header").classList.toggle('green');
+        document.getElementById("seccion1").classList.toggle('green');
+        document.getElementById("seccion2").classList.toggle('green');
+    });
 
     cargarSelectArtistas();
     cargarSelectExposicion();
@@ -145,7 +151,7 @@ function cargarListasConComentarios() {
     } else {
         for (let i = 0; i < exposiciones.length; i++) {
             let item = document.createElement("li");
-            item.textContent = exposiciones[i].titulo + ", " + exposiciones[i].fecha;
+            item.textContent = exposiciones[i].titulo + ", " + formatoFecha(exposiciones[i].fecha);
             exposicionesConComentarios.appendChild(item);
         }
     }
@@ -178,35 +184,53 @@ function agregarComentario(event) {
     cargar();
 }
 
+function formatoFecha(fecha) {
+    fecha = new Date(fecha)
+    const dia = String(fecha.getDate()).padStart(2, '0');
+    const mes = String(fecha.getMonth() + 1).padStart(2, '0');
+    const anio = fecha.getFullYear();
+
+    return `${dia}/${mes}/${anio}`;
+}
+
 
 function mostrarInfo(id) {
     const exposicion = sistema.obtenerExposicionPorIdVisita(id);
     let mensaje = "";
-    const enter = "\n";
-    mensaje += "Titulo: " + exposicion.titulo + enter;
-    mensaje += "Fecha: " + exposicion.fecha + enter;
-    mensaje += "Descripcion: " + exposicion.descripcion + enter;
-    mensaje += "Artistas: " + enter;
-    for (let i = 0; i < exposicion.artistas; i++) {
-        mensaje += exposicion.artistas[i].nombre + enter;
+    const saltoLinea = "\n";
+    mensaje += "Información de la exposición: " + saltoLinea;
+    mensaje += "Titulo: " + exposicion.titulo + saltoLinea;
+    mensaje += "Fecha: " + formatoFecha(exposicion.fecha) + saltoLinea;
+    mensaje += "Descripcion: " + exposicion.descripcion + saltoLinea;
+    mensaje += "Artistas: " + saltoLinea;
+    for (let i = 0; i < exposicion.artistas.length; i++) {
+        let artista = exposicion.artistas[i];
+        mensaje += artista.nombre + " , Edad: " + artista.edad + " , Estilo: " + artista.estilo + saltoLinea;
     }
 
     alert(mensaje);
 }
 
 function obtenerImagenDeCalificacion(calificacion) {
+    let img = ""
     switch (calificacion) {
         case "1":
-            return '<img alt="Rojo" src="img/IMG-20241023-WA0007.jpg">';
+            img = '<img alt="Rojo" src="img/IMG-20241023-WA0007.jpg">';
+            break;
         case "2":
-            return '<img alt="Naranja" src="img/IMG-20241023-WA0011.jpg">';
+            img = '<img alt="Naranja" src="img/IMG-20241023-WA0011.jpg">';
+            break;
         case "3":
-            return '<img alt="Amarillo" src="img/IMG-20241023-WA0009.jpg>"';
+            img = '<img alt="Amarillo" src="img/IMG-20241023-WA0009.jpg">';
+            break;
         case "4":
-            return '<img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg">';
+            img = '<img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg">';
+            break;
         default:
-            return '<img alt="Verde claro" src="img/IMG-20241023-WA0010.jpg">';
+            img = '<img alt="Verde" src="img/IMG-20241023-WA0008.jpg">';
+            break;
     }
+    return img
 }
 
 function cargarTablaComentarios(titulo = "Todos", orden = true) {
